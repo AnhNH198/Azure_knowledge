@@ -9,7 +9,7 @@
 
 * Share: A File Storage share is an SMB file share in Azure. All directories and files must be created in a parent share. An account can contain an unlimited number of shares, and a share can store an unlimited numberoffiles,up to the 5TiB total capacity ofthe file share.
 
-* Directory:An optional hierarchy ofdirectories.  
+* Directory:An optional hierarchy of directories.  
 
 * File: A file inthe share.Afile may be up to 1TiB insize. 
 
