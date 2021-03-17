@@ -1,5 +1,7 @@
 # Azure Storage services –Blob storage
 https://docs.microsoft.com/vi-vn/azure/storage/blobs/storage-quickstart-blobs-cli
+
+https://viblo.asia/p/windows-azure-blob-storage-ZDEeLXDoeJb
 ### Azure blob storage overview
 
 Azure Blob storage is Microsoft's object storage solution for the cloud. Blob storage is optimized for storing massive amounts of unstructured data, such as text or binary data.
