@@ -1,0 +1,104 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virnet_vmtest_vnet_name": {
+            "defaultValue": "VMTest-vnet",
+            "type": "string"
+        },
+        "virnet_lb": {
+            "defaultValue": "/subscriptions/6ba6753a-1c5b-4cef-8852-9445aab71778/resourceGroups/LoadBalance_RG/providers/Microsoft.Network/virtualNetworks/LoadBalance_VNET",
+            "type": "string"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-08-01",
+            "name": "[parameters('virnet_vmtest_vnet_name')]",
+            "location": "Southeast Asia",
+            "tags": {
+                "VM": "ubuntu-test",
+                "created_by": "ARM"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "172.16.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "subnet1",
+                        "properties": {
+                            "addressPrefix": "172.16.1.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "subnet2",
+                        "properties": {
+                            "addressPrefix": "172.16.2.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Disabled"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-08-01",
+            "name": "[concat(parameters('virnet_vmtest_vnet_name'), '/subnet1')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virnet_vmtest_vnet_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "172.16.1.0/24",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-08-01",
+            "name": "[concat(parameters('virnet_vmtest_vnet_name'), '/subnet2')]",
+            "properties": {
+                "addressPrefix": "172.16.2.0/24",
+                "delegations": [],
+                "privateLinkServiceNetworkPolicies": "Disabled",
+                "privateEndpointNetworkPolicies": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2020-08-01",
+            "name": "[concat(parameters('virnet_vmtest_vnet_name'), '/examplearm')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virnet_vmtest_vnet_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[parameters('virnet_lb')]"
+                },
+                "allowForwardedTraffic": true,
+                "allowVirtualNetworkAccess": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteAddressSpace":{
+                    "addressPrefixes": [
+                        "10.16.0.0/16"
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}

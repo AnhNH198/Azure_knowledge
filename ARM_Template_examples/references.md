@@ -1,0 +1,1 @@
+[ARM template syntax explained](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax)

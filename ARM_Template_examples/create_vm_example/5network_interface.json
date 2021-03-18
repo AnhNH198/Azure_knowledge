@@ -1,0 +1,64 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkInterfaces_ubuntu_test_name": {
+            "defaultValue": "ubuntu-test1",
+            "type": "string"
+        },
+        "publicIP_ubuntu_test_name": {
+            "defaultValue": "/subscriptions/6ba6753a-1c5b-4cef-8852-9445aab71778/resourceGroups/VMTest/providers/Microsoft.Network/publicIPAddresses/ubuntu-test-ip",
+            "type": "string"
+        },
+        "virnet_vm_test_vnet_name": {
+            "defaultValue": "/subscriptions/6ba6753a-1c5b-4cef-8852-9445aab71778/resourceGroups/VMTest/providers/Microsoft.Network/virtualNetworks/VMTest-vnet",
+            "type": "string"
+        },
+        "netSecGroup_ubuntu_test_name": {
+            "defaultValue": "/subscriptions/6ba6753a-1c5b-4cef-8852-9445aab71778/resourceGroups/VMTest/providers/Microsoft.Network/networkSecurityGroups/ubuntu-test-nsg",
+            "type": "string"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-08-01",
+            "name": "[parameters('networkInterfaces_ubuntu_test_name')]",
+            "location": "Southeast Asia",
+            "tags": {
+                "VM": "ubuntu-test",
+                "created_by": "ARM"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "172.16.1.38",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[parameters('publicIP_ubuntu_test_name')]"
+                            },
+                            "subnet": {
+                                "id": "[concat(parameters('virnet_vm_test_vnet_name'), '/subnets/subnet1')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[parameters('netSecGroup_ubuntu_test_name')]"
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
